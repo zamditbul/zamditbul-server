@@ -4,48 +4,60 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import zamditbul.zamditbul.data.LoginUser;
-import zamditbul.zamditbul.data.UserInfo;
-import zamditbul.zamditbul.repository.UserInfoRepository;
+import zamditbul.zamditbul.data.User;
+import zamditbul.zamditbul.repository.UserRepository;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class UserService {
-    private final UserInfoRepository userInfoRepository;
+    private final UserRepository userRepository;
 
-    public UserInfo Login(LoginUser user) {
-        Optional<UserInfo> getUser = userInfoRepository.findByUserId(user.getId());
+    public User Login(LoginUser user) {
+        Optional<User> getUser = userRepository.findByUserId(user.getUser_id());
 
         if (getUser.isEmpty()) {
             return null;
         }
 
-        if (user.getPw().equals(getUser.get().getPasswd())) {
+        if (user.getUser_pw().equals(getUser.get().getPasswd())) {
             return getUser.get();
         }
 
         return null;
     }
 
-    public UserInfo Join(LoginUser user) {
+    public User Join(LoginUser user) {
 
-        if (user.getPw().isBlank() || user.getId().isBlank()) {
+        if (user.getUser_pw().isBlank() || user.getUser_id().isBlank()) {
             return null;
         }
 
-        if (userInfoRepository.existsByUserId(user.getId())){
+        if (userRepository.existsByUserId(user.getUser_id())){
             return null;
         }
 
 
-        UserInfo userInfo = new UserInfo();
-        userInfo.setUserId(user.getId());
-        userInfo.setPasswd(user.getPw());
+        User userInfo = new User();
+        userInfo.setUserId(user.getUser_id());
+        userInfo.setPasswd(user.getUser_pw());
 
         log.info(userInfo.toString());
 
-        return userInfoRepository.save(userInfo);
+        return userRepository.save(userInfo);
+    }
+
+    public boolean isIdExists(String userId) {
+        Optional<User> exists = userRepository.findByUserId(userId);
+
+        if (exists.isPresent()) {
+            return true;
+        }
+
+        return false;
     }
 }

@@ -7,17 +7,21 @@ import javax.persistence.*;
 @Getter
 @Entity
 @ToString
-public class UserInfo {
+public class User {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column
     private String userId;
 
     @Column
     private String passwd;
+
+    @OneToOne
+    @JoinColumn(name = "serialNum")
+    private Device device;
 
     public void setUserId(String userId ) {
         this.userId = userId;
