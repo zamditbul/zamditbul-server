@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.sql.Time;
 
 @Entity
 @NoArgsConstructor
@@ -21,10 +20,16 @@ public class Device {
     String color;
 
     @Column
-    Time set_sleep;
+    Integer sleep_hour;
 
     @Column
-    Time set_up;
+    Integer sleep_min;
+
+    @Column
+    Integer wake_hour;
+
+    @Column
+    Integer wake_min;
 
     @Column
     boolean doNotDisturb;

@@ -43,8 +43,10 @@ public class SettingService {
         if (user.isPresent()) {
             Device device = user.get().getDevice();
             device.setColor(setting.getColor());
-            device.setSet_sleep(setting.getSet_sleep());
-            device.setSet_up(setting.getSet_up());
+            device.setSleep_hour(setting.getSleep_hour());
+            device.setSleep_min(setting.getSleep_min());
+            device.setWake_hour(setting.getWake_hour());
+            device.setWake_min(setting.getWake_min());
             device.setDoNotDisturb(setting.isDoNotDisturb());
 
             deviceRepository.save(device);

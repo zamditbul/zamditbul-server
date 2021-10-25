@@ -52,9 +52,8 @@ public class UserService {
     }
 
     public boolean isIdExists(String userId) {
-        Optional<User> exists = userRepository.findByUserId(userId);
 
-        if (exists.isPresent()) {
+        if (userRepository.existsByUserId(userId)) {
             return true;
         }
 
