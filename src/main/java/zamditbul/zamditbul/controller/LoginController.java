@@ -42,7 +42,7 @@ public class LoginController {
     }
 
     @GetMapping("/auth/user/new")
-    public boolean isIdExists(@RequestParam String userId){
+    public boolean isIdExists(@RequestParam(value = "userId", required = false) String userId){
         return userService.isIdExists(userId);
     }
 
