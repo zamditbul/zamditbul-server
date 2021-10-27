@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 @Slf4j
 public class SettingController {
 

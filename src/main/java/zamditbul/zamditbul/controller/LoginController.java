@@ -11,6 +11,7 @@ import zamditbul.zamditbul.service.UserService;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 @Slf4j
 public class LoginController {
 
