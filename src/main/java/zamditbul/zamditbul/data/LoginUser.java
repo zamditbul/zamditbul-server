@@ -8,4 +8,5 @@ import lombok.ToString;
 public class LoginUser {
     private String user_id;
     private String user_pw;
+    private Device device;
 }

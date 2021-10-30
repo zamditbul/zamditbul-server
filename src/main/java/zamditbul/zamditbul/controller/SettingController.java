@@ -20,15 +20,13 @@ public class SettingController {
     private final SettingService settingService;
 
     @GetMapping("/user/setting")
-    public Object getSetting(@RequestParam String userId) {
+    public Object getSetting(@RequestParam(value = "userId", required = false) String userId) {
         return settingService.getDeviceSetting(userId);
     }
 
     @PostMapping("/user/setting")
-    public HttpStatus newSetting(@RequestParam String userId, @RequestBody Device device) {
-
-        return settingService.updateSleepData(userId, device);
-
+    public HttpStatus newSetting(@RequestBody Device device) {
+        return settingService.updateSleepData(device);
     }
 
 

@@ -1,9 +1,6 @@
 package zamditbul.zamditbul.data;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -13,7 +10,12 @@ import javax.persistence.*;
 @Getter
 @AllArgsConstructor
 public class Device {
-    @Id @Column
+
+    @Id
+    @Column
+    String userId;
+
+    @Column
     String serialNum;
 
     @Column
@@ -32,5 +34,6 @@ public class Device {
     Integer wake_min;
 
     @Column
-    boolean doNotDisturb;
+    Boolean doNotDisturb;
+
 }

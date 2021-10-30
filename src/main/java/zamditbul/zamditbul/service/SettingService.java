@@ -38,8 +38,8 @@ public class SettingService {
         return null;
     }
 
-    public HttpStatus updateSleepData(String userId, Device setting) {
-        Optional<User> user = userRepository.findByUserId(userId);
+    public HttpStatus updateSleepData(Device setting) {
+        Optional<User> user = userRepository.findByUserId(setting.getUserId());
         if (user.isPresent()) {
             Device device = user.get().getDevice();
             device.setColor(setting.getColor());
@@ -47,8 +47,7 @@ public class SettingService {
             device.setSleep_min(setting.getSleep_min());
             device.setWake_hour(setting.getWake_hour());
             device.setWake_min(setting.getWake_min());
-            device.setDoNotDisturb(setting.isDoNotDisturb());
-
+            device.setDoNotDisturb(setting.getDoNotDisturb());
             deviceRepository.save(device);
 
             return HttpStatus.OK;
