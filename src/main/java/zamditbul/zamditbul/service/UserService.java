@@ -2,13 +2,18 @@ package zamditbul.zamditbul.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import zamditbul.zamditbul.config.JwtTokenProvider;
 import zamditbul.zamditbul.data.Device;
 import zamditbul.zamditbul.data.LoginUser;
 import zamditbul.zamditbul.data.User;
 import zamditbul.zamditbul.repository.DeviceRepository;
 import zamditbul.zamditbul.repository.UserRepository;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.util.Optional;
 
@@ -16,19 +21,22 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 @Transactional
+
 public class UserService {
     private final UserRepository userRepository;
     private final DeviceRepository deviceRepository;
-
+    private final JwtTokenProvider jwtTokenProvider;
     public User Login(LoginUser user) {
         Optional<User> getUser = userRepository.findByUserId(user.getUser_id());
 
         if (getUser.isEmpty()) {
             return null;
         }
-
-        if (user.getUser_pw().equals(getUser.get().getPasswd())) {
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        if(passwordEncoder.matches(user.getUser_pw(), getUser.get().getPasswd())){
+            getUser.get().setToken(jwtTokenProvider.createToken(String.valueOf(user.getUser_id()), user.getUser_pw()));
             return getUser.get();
+
         }
 
         return null;
@@ -40,23 +48,27 @@ public class UserService {
             return null;
         }
 
-        if (userRepository.existsByUserId(user.getUser_id()) || deviceRepository.existsByUserId(user.getUser_id())){
+        if (userRepository.existsByUserId(user.getUser_id())){
             return null;
         }
 
-
-
+        String encryptedPassword = new BCryptPasswordEncoder(4).encode(user.getUser_pw());
         Device device = new Device();
         device.setSerialNum("NOT_CONNECTED");
         device.setUserId(user.getUser_id());
 
         User userInfo = new User();
         userInfo.setUserId(user.getUser_id());
-        userInfo.setPasswd(user.getUser_pw());
+        userInfo.setPasswd(encryptedPassword);
         userInfo.setDevice(deviceRepository.save(device));
         log.info(userInfo.toString());
 
         return userRepository.save(userInfo);
+    }
+    public boolean logout(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        session.invalidate();
+        return true;
     }
 
     public boolean isIdExists(String userId) {

@@ -8,6 +8,7 @@ import zamditbul.zamditbul.data.LoginUser;
 import zamditbul.zamditbul.data.User;
 import zamditbul.zamditbul.service.UserService;
 
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,22 +19,17 @@ public class LoginController {
     private final UserService userService;
 
     @PostMapping(value = "/auth/user")
-    public HttpStatus Login(@RequestBody LoginUser user) {
-
-        User login = userService.Login(user);
-
-        if (login == null) {
-            return HttpStatus.BAD_REQUEST;
-        }
-        return HttpStatus.OK;
+    public User Login(@RequestBody LoginUser user) {
+        return userService.Login(user);
     }
 
 
-    @DeleteMapping("/auth/user")
-    public HttpStatus Logout() {
-        //추후 코드 수정
-
-        return HttpStatus.OK;
+    @GetMapping("/auth/user")
+    public HttpStatus Logout(HttpServletRequest request) {
+        if(userService.logout(request)){
+            return HttpStatus.OK;
+        }
+        return HttpStatus.BAD_REQUEST;
     }
 
     @PostMapping(value = "/auth/user/new")

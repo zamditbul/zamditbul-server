@@ -7,6 +7,7 @@ import org.hibernate.engine.internal.Cascade;
 import javax.persistence.*;
 
 @Getter
+@Setter
 @Entity
 @ToString
 public class User {
@@ -25,6 +26,8 @@ public class User {
     @JoinColumn (name = "device", referencedColumnName = "userId")
     @JsonIgnore
     private Device device;
+
+    private String token;
 
     public void setUserId(String userId ) {
         this.userId = userId;
