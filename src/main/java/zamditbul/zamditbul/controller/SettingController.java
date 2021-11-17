@@ -2,6 +2,8 @@ package zamditbul.zamditbul.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.paho.client.mqttv3.MqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import zamditbul.zamditbul.data.Device;
@@ -10,6 +12,7 @@ import zamditbul.zamditbul.data.User;
 import zamditbul.zamditbul.service.SettingService;
 
 import javax.servlet.http.HttpSession;
+import java.nio.charset.StandardCharsets;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,7 +29,8 @@ public class SettingController {
 
     @PostMapping("/user/setting")
     public HttpStatus newSetting(@RequestBody Device device) {
-        return settingService.updateSleepData(device);
+        MqttMessage message = new MqttMessage(device.toString().getBytes(StandardCharsets.UTF_8));
+        return settingService.updateSetting(device);
     }
 
 

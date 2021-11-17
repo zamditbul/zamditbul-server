@@ -38,7 +38,7 @@ public class SettingService {
         return null;
     }
 
-    public HttpStatus updateSleepData(Device setting) {
+    public HttpStatus updateSetting(Device setting) {
         Optional<User> user = userRepository.findByUserId(setting.getUserId());
         if (user.isPresent()) {
             Device device = user.get().getDevice();
