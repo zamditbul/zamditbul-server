@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-public class SleepDataDTO {
+public class SleepDataInfo {
     private List<SleepData> sleepData;
     private Integer avg_sleep;
     private Integer avg_break;

@@ -12,6 +12,7 @@ repositories {
 	mavenCentral()
 }
 
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-integration'
@@ -20,11 +21,14 @@ dependencies {
 	implementation 'org.springframework.integration:spring-integration-http'
 	implementation 'org.springframework.integration:spring-integration-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-integration'
-	implementation 'org.springframework.integration:spring-integration-mqtt'
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 	compileOnly 'org.projectlombok:lombok:1.18.22'
 	annotationProcessor 'org.projectlombok:lombok:1.18.22'
 	runtimeOnly 'mysql:mysql-connector-java'
+
+	implementation 'org.springframework.boot:spring-boot-starter-integration'
+	implementation 'org.springframework.integration:spring-integration-mqtt'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.integration:spring-integration-test'
 }

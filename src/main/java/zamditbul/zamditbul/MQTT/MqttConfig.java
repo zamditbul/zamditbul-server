@@ -1,5 +1,6 @@
-package zamditbul.zamditbul.config;
+package zamditbul.zamditbul.MQTT;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
@@ -9,6 +10,7 @@ import org.springframework.integration.annotation.MessagingGateway;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.channel.DirectChannel;
 import org.springframework.integration.core.MessageProducer;
+import org.springframework.integration.json.JsonToObjectTransformer;
 import org.springframework.integration.mqtt.core.DefaultMqttPahoClientFactory;
 import org.springframework.integration.mqtt.inbound.MqttPahoMessageDrivenChannelAdapter;
 import org.springframework.integration.mqtt.outbound.MqttPahoMessageHandler;
@@ -16,17 +18,24 @@ import org.springframework.integration.mqtt.support.DefaultPahoMessageConverter;
 import org.springframework.integration.mqtt.support.MqttHeaders;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHandler;
-import org.springframework.messaging.handler.annotation.Header;
+import zamditbul.zamditbul.data.SleepData;
+import zamditbul.zamditbul.data.SleepDataRecord;
+import zamditbul.zamditbul.data.User;
+import zamditbul.zamditbul.service.RecordService;
+
+import java.util.Optional;
 
 @Configuration
+@RequiredArgsConstructor
 @Slf4j
 public class MqttConfig {
-
     private static final String MQTT_USERNAME = "server";
     private static final String MQTT_PASSWORD = "password";
     private static final String BROKER_URL = "tcp://localhost:1883";
     private static final String MQTT_CLIENT_ID = MqttAsyncClient.generateClientId();
-    private static final String TOPIC_FILTER = "myProject";
+    private static final String SUB_TOPIC = "record";
+
+    private final RecordService recordService;
 
     private MqttConnectOptions connectOptions() {
         MqttConnectOptions options = new MqttConnectOptions();
@@ -40,7 +49,6 @@ public class MqttConfig {
     public DefaultMqttPahoClientFactory defaultMqttPahoClientFactory() {
         DefaultMqttPahoClientFactory clientFactory = new DefaultMqttPahoClientFactory();
         clientFactory.setConnectionOptions(connectOptions());
-
         return clientFactory;
     }
 
@@ -52,7 +60,7 @@ public class MqttConfig {
     @Bean
     public MessageProducer inboundChannel() {
         MqttPahoMessageDrivenChannelAdapter adapter =
-                new MqttPahoMessageDrivenChannelAdapter(BROKER_URL, MQTT_CLIENT_ID, TOPIC_FILTER);
+                new MqttPahoMessageDrivenChannelAdapter(BROKER_URL, MQTT_CLIENT_ID, SUB_TOPIC);
         adapter.setCompletionTimeout(5000);
         adapter.setConverter(new DefaultPahoMessageConverter());
         adapter.setQos(1);
@@ -64,32 +72,8 @@ public class MqttConfig {
     @ServiceActivator(inputChannel = "mqttInputChannel")
     public MessageHandler inboundMessageHandler() {
         return message -> {
-            String topic = (String) message.getHeaders().get(MqttHeaders.RECEIVED_TOPIC);
-            log.info("Topic: {}", topic);
-            log.info("Payload: {}", message.getPayload());
-
+            recordService.MessageHandle(message);
         };
-    }
-
-    @Bean
-    public MessageChannel mqttOutboundChannel() {
-        return new DirectChannel();
-    }
-
-    @Bean
-    @ServiceActivator(inputChannel = "mqttOutboundChannel")
-    public MessageHandler mqttOutbound(DefaultMqttPahoClientFactory clientFactory) {
-        MqttPahoMessageHandler messageHandler =
-                new MqttPahoMessageHandler(MQTT_CLIENT_ID, clientFactory);
-        messageHandler.setAsync(true);
-        messageHandler.setDefaultQos(1);
-
-        return messageHandler;
-    }
-
-    @MessagingGateway(defaultRequestChannel = "mqttOutboundChannel")
-    public interface OutboundGateway{
-        void sendToMqtt(String payload, @Header(MqttHeaders.TOPIC) String topic);
     }
 
 }
