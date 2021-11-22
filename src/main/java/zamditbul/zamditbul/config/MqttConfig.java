@@ -1,4 +1,4 @@
-package zamditbul.zamditbul.MQTT;
+package zamditbul.zamditbul.config;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
