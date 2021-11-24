@@ -1,4 +1,4 @@
-package zamditbul.zamditbul.data;
+package zamditbul.zamditbul.data.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;

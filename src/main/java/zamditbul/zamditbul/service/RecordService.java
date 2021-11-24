@@ -5,9 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.integration.json.JsonToObjectTransformer;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Service;
-import zamditbul.zamditbul.data.SleepData;
-import zamditbul.zamditbul.data.SleepDataRecord;
-import zamditbul.zamditbul.data.User;
+import zamditbul.zamditbul.data.dao.SleepData;
+import zamditbul.zamditbul.data.dto.SleepDataRecord;
+import zamditbul.zamditbul.data.dao.User;
 import zamditbul.zamditbul.repository.SleepDataRepository;
 import zamditbul.zamditbul.repository.UserRepository;
 

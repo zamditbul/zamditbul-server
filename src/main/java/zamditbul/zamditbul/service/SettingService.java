@@ -3,9 +3,11 @@ package zamditbul.zamditbul.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import zamditbul.zamditbul.data.Device;
-import zamditbul.zamditbul.data.SleepData;
-import zamditbul.zamditbul.data.User;
+import zamditbul.zamditbul.data.dao.Device;
+import zamditbul.zamditbul.data.dao.SleepData;
+import zamditbul.zamditbul.data.dto.ConnectDevice;
+import zamditbul.zamditbul.data.dto.UpdateSetting;
+import zamditbul.zamditbul.data.dao.User;
 import zamditbul.zamditbul.repository.DeviceRepository;
 import zamditbul.zamditbul.repository.SleepDataRepository;
 import zamditbul.zamditbul.repository.UserRepository;
@@ -30,6 +32,24 @@ public class SettingService {
         else return null;
     }
 
+    public HttpStatus newDevice(ConnectDevice device) {
+        Optional<User> user = userRepository.findByUserId(device.getUserId());
+        if (user.isEmpty()) {
+            return HttpStatus.UNAUTHORIZED;
+        }
+        User saved = user.get();
+
+        Device savedDevice = saved.getDevice();
+        savedDevice.setSerialNum(device.getSerialNum());
+        saved.setDevice(savedDevice);
+
+        userRepository.save(saved);
+        deviceRepository.save(savedDevice);
+
+        return HttpStatus.OK;
+
+    }
+
     public Optional<SleepData> getSleepData(String userId) {
         Optional<User> user = userRepository.findByUserId(userId);
         if (user.isPresent()) {
@@ -38,21 +58,19 @@ public class SettingService {
         return null;
     }
 
-    public HttpStatus updateSetting(Device setting) {
-        Optional<User> user = userRepository.findByUserId(setting.getUserId());
+    public Device updateSetting(UpdateSetting update) {
+        Optional<User> user = userRepository.findByUserId(update.getUserId());
         if (user.isPresent()) {
             Device device = user.get().getDevice();
+            Device setting = update.getDevice();
             device.setColor(setting.getColor());
-            device.setSleep_hour(setting.getSleep_hour());
-            device.setSleep_min(setting.getSleep_min());
-            device.setWake_hour(setting.getWake_hour());
-            device.setWake_min(setting.getWake_min());
+            device.setSleep(update.getDevice().getSleep());
+            device.setWake_up(update.getDevice().getWake_up());
             device.setDoNotDisturb(setting.getDoNotDisturb());
-            deviceRepository.save(device);
+            return deviceRepository.save(device);
 
-            return HttpStatus.OK;
         }
-        return HttpStatus.UNAUTHORIZED;
+        else return null;
     }
 
     public HttpStatus updateUser(User user) {

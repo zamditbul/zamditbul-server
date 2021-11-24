@@ -1,8 +1,8 @@
 package zamditbul.zamditbul.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import zamditbul.zamditbul.data.SleepData;
-import zamditbul.zamditbul.data.User;
+import zamditbul.zamditbul.data.dao.SleepData;
+import zamditbul.zamditbul.data.dao.User;
 
 import java.util.Optional;
 

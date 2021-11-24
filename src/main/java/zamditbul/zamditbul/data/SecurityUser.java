@@ -14,9 +14,9 @@ import java.util.List;
 public class SecurityUser extends User {
     private static final String ROLE_PREFIX = "ROLE_";
 
-    private zamditbul.zamditbul.data.User user;
+    private zamditbul.zamditbul.data.dao.User user;
 
-    public SecurityUser(zamditbul.zamditbul.data.User user){
+    public SecurityUser(zamditbul.zamditbul.data.dao.User user){
         super(String.valueOf(user.getUserId()), user.getPasswd(),makeGrantedAuthority("user"));
     }
     private static List<GrantedAuthority> makeGrantedAuthority(String userType){

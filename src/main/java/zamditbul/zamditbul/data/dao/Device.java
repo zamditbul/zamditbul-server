@@ -1,19 +1,20 @@
-package zamditbul.zamditbul.data;
+package zamditbul.zamditbul.data.dao;
 
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalTime;
 
 @Entity
 @NoArgsConstructor
 @Setter
 @Getter
 @AllArgsConstructor
+@ToString
 public class Device {
 
-    @Id
-    @Column
-    String userId;
+    @Id @GeneratedValue
+    Integer deviceId;
 
     @Column
     String serialNum;
@@ -22,16 +23,10 @@ public class Device {
     String color;
 
     @Column
-    Integer sleep_hour;
+    LocalTime sleep;
 
     @Column
-    Integer sleep_min;
-
-    @Column
-    Integer wake_hour;
-
-    @Column
-    Integer wake_min;
+    LocalTime wake_up;
 
     @Column
     Boolean doNotDisturb;

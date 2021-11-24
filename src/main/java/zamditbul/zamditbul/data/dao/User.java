@@ -1,8 +1,7 @@
-package zamditbul.zamditbul.data;
+package zamditbul.zamditbul.data.dao;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.hibernate.engine.internal.Cascade;
 
 import javax.persistence.*;
 
@@ -23,7 +22,7 @@ public class User {
     private String passwd;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn (name = "device", referencedColumnName = "userId")
+    @JoinColumn (name = "SerialNum")
     @JsonIgnore
     private Device device;
 

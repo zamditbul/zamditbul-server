@@ -1,15 +1,13 @@
-package zamditbul.zamditbul.data;
+package zamditbul.zamditbul.data.dao;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
+import zamditbul.zamditbul.data.dao.User;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
 
 @Entity
 @NoArgsConstructor
