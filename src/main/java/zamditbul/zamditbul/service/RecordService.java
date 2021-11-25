@@ -24,10 +24,10 @@ public class RecordService {
         JsonToObjectTransformer transformer = new JsonToObjectTransformer(SleepDataRecord.class);
         SleepDataRecord payload = (SleepDataRecord) transformer.transform(message).getPayload();
         log.info(payload.toString());
-        Optional<User> user = userRepository.findById(payload.getUserId());
+        Optional<User> user = userRepository.findByUserId(payload.getUser_id());
         if (user.isPresent() && !user.get().getDevice().equals(null)) {
             SleepData sleepData = new SleepData(payload.getDate(), payload.getBreak_count(),
-                    payload.getSleep_time(), user.get());
+                    payload.getSleep_time(),payload.getWake_time(), payload.getSleep_count(), user.get());
                     sleepDataRepository.save(sleepData);
         }
     }

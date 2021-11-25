@@ -1,11 +1,12 @@
 package zamditbul.zamditbul.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import zamditbul.zamditbul.data.dao.Device;
-import zamditbul.zamditbul.data.dao.SleepData;
 import zamditbul.zamditbul.data.dto.ConnectDevice;
+import zamditbul.zamditbul.data.dto.SleepDataInfo;
 import zamditbul.zamditbul.data.dto.UpdateSetting;
 import zamditbul.zamditbul.data.dao.User;
 import zamditbul.zamditbul.repository.DeviceRepository;
@@ -13,11 +14,13 @@ import zamditbul.zamditbul.repository.SleepDataRepository;
 import zamditbul.zamditbul.repository.UserRepository;
 
 import javax.transaction.Transactional;
+import java.time.LocalTime;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class SettingService {
 
     private final DeviceRepository deviceRepository;
@@ -33,7 +36,7 @@ public class SettingService {
     }
 
     public HttpStatus newDevice(ConnectDevice device) {
-        Optional<User> user = userRepository.findByUserId(device.getUserId());
+        Optional<User> user = userRepository.findByUserId(device.getUser_id());
         if (user.isEmpty()) {
             return HttpStatus.UNAUTHORIZED;
         }
@@ -50,16 +53,37 @@ public class SettingService {
 
     }
 
-    public Optional<SleepData> getSleepData(String userId) {
-        Optional<User> user = userRepository.findByUserId(userId);
-        if (user.isPresent()) {
-            return sleepDataRepository.findByUser(user.get());
+    public SleepDataInfo getSleepData(String userId) {
+        Optional<User> saved = userRepository.findByUserId(userId);
+        if (saved.isEmpty()) {
+            return null;
         }
-        return null;
+        User user = saved.get();
+        Integer id = user.getId();
+
+        SleepDataInfo info = new SleepDataInfo();
+
+        Integer average_sleep = sleepDataRepository.getAVGSleepTime(id);
+        LocalTime sleep = LocalTime.of(average_sleep / 10000, (average_sleep % 10000) / 100);
+
+        Integer avg_break = sleepDataRepository.getAGVBreakCount(id);
+
+        Integer agv_wake = sleepDataRepository.getAGVWakeTime(id);
+        LocalTime wake = LocalTime.of(agv_wake / 10000, (average_sleep % 10000) / 100);
+
+        Integer agv_sleep_time = sleepDataRepository.getAGVSleepCount(id);
+        LocalTime sleep_time = LocalTime.of(agv_sleep_time / 10000, (average_sleep % 10000) / 100);
+
+        info.setSleepData(sleepDataRepository.findByUser_IdOrderByDateDesc(id));
+        info.setAvg_sleep(sleep_time);
+        info.setAvg_break(avg_break);
+        info.setAvg_wake(wake);
+        info.setAvg_sleep_time(sleep);
+        return info;
     }
 
     public Device updateSetting(UpdateSetting update) {
-        Optional<User> user = userRepository.findByUserId(update.getUserId());
+        Optional<User> user = userRepository.findByUserId(update.getUser_id());
         if (user.isPresent()) {
             Device device = user.get().getDevice();
             Device setting = update.getDevice();

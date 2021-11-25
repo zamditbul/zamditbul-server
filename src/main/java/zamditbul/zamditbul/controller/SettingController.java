@@ -2,13 +2,16 @@ package zamditbul.zamditbul.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.eclipse.paho.client.mqttv3.*;
+import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
+import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import zamditbul.zamditbul.data.dao.SleepData;
-import zamditbul.zamditbul.data.dto.ConnectDevice;
-import zamditbul.zamditbul.data.dto.UpdateSetting;
 import zamditbul.zamditbul.data.dao.User;
+import zamditbul.zamditbul.data.dto.ConnectDevice;
+import zamditbul.zamditbul.data.dto.SleepDataInfo;
+import zamditbul.zamditbul.data.dto.UpdateSetting;
 import zamditbul.zamditbul.service.SettingService;
 
 import java.nio.charset.StandardCharsets;
@@ -22,8 +25,24 @@ public class SettingController {
     private final SettingService settingService;
 
     @PostMapping("/user/device")
-    public HttpStatus newDevice(@RequestBody ConnectDevice connect) {
-        return settingService.newDevice(connect);
+    public HttpStatus newDevice(@RequestBody ConnectDevice connect) throws MqttException {
+
+        HttpStatus httpStatus = settingService.newDevice(connect);
+
+        if (httpStatus.is4xxClientError()) {
+            return HttpStatus.UNAUTHORIZED;
+        }
+        MqttMessage message = new MqttMessage(connect.getUser_id().getBytes(StandardCharsets.UTF_8));
+        String clientUrl = "tcp://localhost:1883";
+        MqttClient mqttClient = new MqttClient(clientUrl, MqttAsyncClient.generateClientId());
+        mqttClient.connect();
+
+        String uri = "setting/" + connect.getSerialNum();
+
+        mqttClient.publish(uri, message);
+
+        mqttClient.disconnect();
+        return HttpStatus.OK;
     }
 
     @GetMapping("/user/setting")
@@ -46,14 +65,18 @@ public class SettingController {
 
             mqttClient.publish(uri, message);
 
+            mqttClient.disconnect();
+
             return HttpStatus.OK;
         }
     }
 
 
     @GetMapping("/user/record")
-    public SleepData getSleepData(@RequestParam String userId) {
-        return settingService.getSleepData(userId).get();
+    public SleepDataInfo getSleepData(@RequestParam String userId) {
+
+        SleepDataInfo sleepData = settingService.getSleepData(userId);
+        return sleepData;
     }
 
     @PutMapping("/user/info")

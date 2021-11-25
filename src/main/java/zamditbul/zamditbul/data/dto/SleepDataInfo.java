@@ -2,6 +2,7 @@ package zamditbul.zamditbul.data.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import zamditbul.zamditbul.data.dao.SleepData;
 
@@ -10,9 +11,11 @@ import java.util.List;
 
 @Getter
 @Setter
-@Builder
+@NoArgsConstructor
 public class SleepDataInfo {
     private List<SleepData> sleepData;
     private LocalTime avg_sleep;
-    private LocalTime avg_break;
+    private Integer avg_break;
+    private LocalTime avg_sleep_time;
+    private LocalTime avg_wake;
 }

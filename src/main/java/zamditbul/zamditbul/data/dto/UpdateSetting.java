@@ -7,6 +7,6 @@ import zamditbul.zamditbul.data.dao.Device;
 @Getter
 @ToString
 public class UpdateSetting {
-    String userId;
+    String user_id;
     Device device;
 }

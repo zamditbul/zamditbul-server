@@ -4,6 +4,6 @@ import lombok.Getter;
 
 @Getter
 public class ConnectDevice {
-    String userId;
+    String user_id;
     String serialNum;
 }

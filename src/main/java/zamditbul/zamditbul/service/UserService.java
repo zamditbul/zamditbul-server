@@ -7,8 +7,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import zamditbul.zamditbul.config.JwtTokenProvider;
 import zamditbul.zamditbul.data.dao.Device;
-import zamditbul.zamditbul.data.dto.LoginUser;
 import zamditbul.zamditbul.data.dao.User;
+import zamditbul.zamditbul.data.dto.LoginUser;
 import zamditbul.zamditbul.repository.DeviceRepository;
 import zamditbul.zamditbul.repository.UserRepository;
 

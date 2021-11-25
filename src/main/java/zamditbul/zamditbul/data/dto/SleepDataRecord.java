@@ -1,6 +1,5 @@
 package zamditbul.zamditbul.data.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -12,10 +11,13 @@ import java.time.LocalTime;
 @ToString
 public class SleepDataRecord {
 
-    Integer userId;
+    String user_id;
     LocalDate date;
     Integer break_count;
-    @DateTimeFormat(pattern = "HH:mm:ss")
+    @DateTimeFormat(pattern = "HH:mm")
     LocalTime sleep_time;
-
+    @DateTimeFormat(pattern = "HH:mm")
+    LocalTime wake_time;
+    @DateTimeFormat(pattern = "HH:mm")
+    LocalTime sleep_count;
 }

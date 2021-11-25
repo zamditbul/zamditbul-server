@@ -2,7 +2,10 @@ package zamditbul.zamditbul.data.dao;
 
 import lombok.*;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.time.LocalTime;
 
 @Entity
