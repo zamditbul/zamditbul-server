@@ -6,6 +6,7 @@ import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import zamditbul.zamditbul.data.dao.User;
@@ -24,6 +25,9 @@ public class SettingController {
 
     private final SettingService settingService;
 
+    @Value("${mqtt.client.url}")
+    private final String clientUrl;
+
     @PostMapping("/user/device")
     public HttpStatus newDevice(@RequestBody ConnectDevice connect) throws MqttException {
 
@@ -33,7 +37,6 @@ public class SettingController {
             return HttpStatus.UNAUTHORIZED;
         }
         MqttMessage message = new MqttMessage(connect.getUser_id().getBytes(StandardCharsets.UTF_8));
-        String clientUrl = "tcp://localhost:1883";
         MqttClient mqttClient = new MqttClient(clientUrl, MqttAsyncClient.generateClientId());
         mqttClient.connect();
 
@@ -57,7 +60,6 @@ public class SettingController {
             return HttpStatus.UNAUTHORIZED;
         else{
             MqttMessage message = new MqttMessage(device.toString().getBytes(StandardCharsets.UTF_8));
-            String clientUrl = "tcp://localhost:1883";
             MqttClient mqttClient = new MqttClient(clientUrl, MqttAsyncClient.generateClientId());
             mqttClient.connect();
 
