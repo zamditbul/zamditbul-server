@@ -3,10 +3,13 @@ package zamditbul.zamditbul.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import zamditbul.zamditbul.data.dao.User;
 import zamditbul.zamditbul.data.dto.LoginUser;
 import zamditbul.zamditbul.service.UserService;
+
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -42,6 +45,14 @@ public class LoginController {
         return userService.isIdExists(userId);
     }
 
-
+    @GetMapping("/auth/user/info")
+    public String GetUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.getName().equals("anonymousUser")){
+            return null;
+        }
+        String userId = String.valueOf(authentication.getName());
+        return userId;
+    }
 
 }

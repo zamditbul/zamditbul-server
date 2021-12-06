@@ -22,7 +22,7 @@ import zamditbul.zamditbul.service.RecordService;
 @Slf4j
 public class MqttConfig {
     @Value("${mqtt.client.url}")
-    private final String BROKER_URL;
+    private String BROKER_URL;
 
     private static final String MQTT_USERNAME = "server";
     private static final String MQTT_PASSWORD = "password";

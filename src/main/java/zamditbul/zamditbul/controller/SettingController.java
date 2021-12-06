@@ -26,7 +26,7 @@ public class SettingController {
     private final SettingService settingService;
 
     @Value("${mqtt.client.url}")
-    private final String clientUrl;
+    private String clientUrl;
 
     @PostMapping("/user/device")
     public HttpStatus newDevice(@RequestBody ConnectDevice connect) throws MqttException {
